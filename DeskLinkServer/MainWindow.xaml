@@ -3,10 +3,78 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:i="clr-namespace:Microsoft.Xaml.Behaviors;assembly=Microsoft.Xaml.Behaviors"
+        xmlns:c="clr-namespace:DeskLinkServer.Framework.Components"
+        xmlns:resx="clr-namespace:DeskLinkServer.Properties"
         xmlns:local="clr-namespace:DeskLinkServer"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
-
+        Title="{x:Static resx:Resources.Title}"
+        Height="400" Width="384"
+        ResizeMode="CanMinimize">
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding OnLoadedCommand}"/>
+        </i:EventTrigger>
+        <i:EventTrigger EventName="Closing">
+            <i:InvokeCommandAction Command="{Binding OnClosingCommand}"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+    <Grid Background="{StaticResource MainBackgroundBrush}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="120"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Border Margin="10 10 5 5"
+                Background="{StaticResource MainForegroundBrush}"
+                CornerRadius="5"
+                Grid.Row="0"
+                Grid.Column="0">
+            <c:StatusIcon x:Name="StatusIcon"
+                          Status="Success"/>
+        </Border>
+        <Border Grid.Row="0"
+                Grid.Column="1"
+                Grid.ColumnSpan="2"
+                Margin="5 10 10 5"
+                Background="{StaticResource MainForegroundBrush}"
+                CornerRadius="5">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="27"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Border BorderBrush="{StaticResource BlueBrush}"
+                        BorderThickness="0 0 0 1">
+                    <TextBlock Grid.Row="0"
+                               VerticalAlignment="Center"
+                               HorizontalAlignment="Center"
+                               Text="{Binding StatusText}"
+                               TextWrapping="Wrap"
+                               Margin="5"/>
+                </Border>
+                <TextBlock Grid.Row="1"
+                           VerticalAlignment="Center"
+                           HorizontalAlignment="Center"
+                           Text="{Binding BTNameText}"
+                           TextWrapping="Wrap"
+                           Margin="5"
+                           FontSize="20"/>
+            </Grid>
+        </Border>
+        <Border Grid.Row="1"
+                Grid.Column="0"
+                Grid.ColumnSpan="3"
+                Margin="10 5 10 10"
+                Background="{StaticResource MainForegroundBrush}"
+                CornerRadius="5">
+            <Frame Margin="5"
+                   Content="{Binding CurrentPage}"
+                   NavigationUIVisibility="Hidden"/>
+        </Border>
     </Grid>
 </Window>
