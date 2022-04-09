@@ -6,7 +6,9 @@
         xmlns:i="clr-namespace:Microsoft.Xaml.Behaviors;assembly=Microsoft.Xaml.Behaviors"
         xmlns:c="clr-namespace:DeskLinkServer.Framework.Components"
         xmlns:resx="clr-namespace:DeskLinkServer.Properties"
+        xmlns:logic="clr-namespace:DeskLinkServer.Logic"
         xmlns:local="clr-namespace:DeskLinkServer"
+        d:DataContext="{d:DesignInstance logic:MainViewModel}"
         mc:Ignorable="d"
         Title="{x:Static resx:Resources.Title}"
         Height="400" Width="384"
@@ -35,7 +37,7 @@
                 Grid.Row="0"
                 Grid.Column="0">
             <c:StatusIcon x:Name="StatusIcon"
-                          Status="Success"/>
+                          Status="{Binding DisplayStatus}"/>
         </Border>
         <Border Grid.Row="0"
                 Grid.Column="1"

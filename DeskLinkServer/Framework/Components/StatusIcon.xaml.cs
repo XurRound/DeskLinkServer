@@ -33,6 +33,19 @@ namespace DeskLinkServer.Framework.Components
             }
         }
 
+        private void StatusChanged()
+        {
+            string icon = StatusEnum.GetIconName(Status);
+            if (icon != null)
+            {
+                IconImage.Source = (DrawingImage)IconDictionary[icon];
+                if (StatusEnum.GetAnimated(Status))
+                    AnimationBoard.Begin();
+                else
+                    AnimationBoard.Stop();
+            }
+        }
+
         private readonly Storyboard AnimationBoard;
         private readonly ResourceDictionary IconDictionary;
 
@@ -75,19 +88,6 @@ namespace DeskLinkServer.Framework.Components
             AnimationBoard.Children.Add(rotationAnimation);
             AnimationBoard.Children.Add(opacityAnimation);
             StatusChanged();
-        }
-
-        private void StatusChanged()
-        {
-            string icon = StatusEnum.GetIconName(Status);
-            if (icon != null)
-            {
-                IconImage.Source = (DrawingImage)IconDictionary[icon];
-                if (StatusEnum.GetAnimated(Status))
-                    AnimationBoard.Begin();
-                else
-                    AnimationBoard.Stop();
-            }
         }
     }
 }

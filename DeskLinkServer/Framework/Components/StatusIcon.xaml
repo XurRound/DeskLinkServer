@@ -7,7 +7,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="100" d:DesignWidth="100">
     <Image x:Name="IconImage"
-           Margin="10"
+           Margin="12"
            HorizontalAlignment="Center"
            VerticalAlignment="Center"/>
 </UserControl>

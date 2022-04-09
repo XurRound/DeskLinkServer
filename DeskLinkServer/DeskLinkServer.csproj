@@ -15,7 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Framework\Components\Pages\" />
+    <Folder Include="Framework\Pages\" />
     <Folder Include="Logic\Network\" />
     <Folder Include="Logic\Protocol\" />
   </ItemGroup>
