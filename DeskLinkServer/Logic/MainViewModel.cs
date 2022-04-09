@@ -2,6 +2,7 @@
 using System.Windows.Input;
 using DeskLinkServer.Framework.Base;
 using DeskLinkServer.Framework.Components;
+using DeskLinkServer.Framework.Pages;
 
 namespace DeskLinkServer.Logic
 {
@@ -9,17 +10,17 @@ namespace DeskLinkServer.Logic
     {
         public MainViewModel()
         {
-
+            currentPage = new PlaceholderPage();
         }
 
         #region Fields
 
-        private string statusText = "";
-        private string btNameText = "";
+        private string statusText = "StatusText";
+        private string deviceNameText = "DeviceNameText";
 
         private Page currentPage;
 
-        private Status displayStatus = Status.Success;
+        private Status displayStatus = Status.Wait;
 
         #endregion
 
@@ -38,15 +39,15 @@ namespace DeskLinkServer.Logic
             }
         }
 
-        public string BTNameText
+        public string DeviceNameText
         {
             get
             {
-                return btNameText;
+                return deviceNameText;
             }
             set
             {
-                btNameText = value;
+                deviceNameText = value;
                 RaisePropertyChanged();
             }
         }

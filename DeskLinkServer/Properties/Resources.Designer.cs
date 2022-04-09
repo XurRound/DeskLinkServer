@@ -61,11 +61,29 @@ namespace DeskLinkServer.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Добавить устройство.
+        /// </summary>
+        public static string AddDeviceButtonText {
+            get {
+                return ResourceManager.GetString("AddDeviceButtonText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на DeskLink Server.
         /// </summary>
-        public static string Title {
+        public static string MainWindowTitle {
             get {
-                return ResourceManager.GetString("Title", resourceCulture);
+                return ResourceManager.GetString("MainWindowTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Нет подключённых устройств. :(.
+        /// </summary>
+        public static string StatusMissingDevices {
+            get {
+                return ResourceManager.GetString("StatusMissingDevices", resourceCulture);
             }
         }
     }

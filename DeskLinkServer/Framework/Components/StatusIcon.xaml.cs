@@ -59,23 +59,19 @@ namespace DeskLinkServer.Framework.Components
             };
             RenderTransform = new RotateTransform(0);
             RenderTransformOrigin = new Point(0.5, 0.5);
-            DoubleAnimationUsingKeyFrames rotationAnimation = new DoubleAnimationUsingKeyFrames()
+            DoubleAnimation rotationAnimation = new DoubleAnimation()
             {
                 Duration = TimeSpan.FromSeconds(1.2),
                 RepeatBehavior = RepeatBehavior.Forever,
+                EasingFunction = new CubicEase(),
+                AccelerationRatio = 0.5,
+                DecelerationRatio = 0.1,
+                From = 0,
+                To = 540
             };
-            rotationAnimation.KeyFrames.Add(new EasingDoubleKeyFrame(0, KeyTime.FromPercent(0), new QuadraticEase()
-            {
-                EasingMode = EasingMode.EaseIn
-            }));
-            rotationAnimation.KeyFrames.Add(new EasingDoubleKeyFrame(120, KeyTime.FromPercent(0.2)));
-            rotationAnimation.KeyFrames.Add(new EasingDoubleKeyFrame(360, KeyTime.FromPercent(1), new QuadraticEase()
-            {
-                EasingMode = EasingMode.EaseOut
-            }));
             DoubleAnimation opacityAnimation = new DoubleAnimation()
             {
-                From = 0,
+                From = 0.1,
                 To = 1,
                 Duration = TimeSpan.FromSeconds(0.6),
                 RepeatBehavior = RepeatBehavior.Forever,

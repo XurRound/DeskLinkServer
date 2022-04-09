@@ -10,7 +10,7 @@
         xmlns:local="clr-namespace:DeskLinkServer"
         d:DataContext="{d:DesignInstance logic:MainViewModel}"
         mc:Ignorable="d"
-        Title="{x:Static resx:Resources.Title}"
+        Title="{x:Static resx:Resources.MainWindowTitle}"
         Height="400" Width="384"
         ResizeMode="CanMinimize">
     <i:Interaction.Triggers>
@@ -62,7 +62,7 @@
                 <TextBlock Grid.Row="1"
                            VerticalAlignment="Center"
                            HorizontalAlignment="Center"
-                           Text="{Binding BTNameText}"
+                           Text="{Binding DeviceNameText}"
                            TextWrapping="Wrap"
                            Margin="5"
                            FontSize="20"/>
