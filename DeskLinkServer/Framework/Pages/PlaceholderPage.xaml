@@ -7,7 +7,7 @@
       xmlns:c="clr-namespace:DeskLinkServer.Framework.Components"
       xmlns:resx="clr-namespace:DeskLinkServer.Properties"
       mc:Ignorable="d" 
-      d:DesignHeight="385" d:DesignWidth="369"
+      d:DesignHeight="239" d:DesignWidth="354"
       Title="PlaceholderPage">
     <StackPanel
         VerticalAlignment="Center"

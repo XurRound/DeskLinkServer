@@ -1,22 +1,34 @@
-﻿using System.Windows.Controls;
-using System.Windows.Input;
+﻿using System.Windows.Input;
+using System.Windows.Controls;
 using DeskLinkServer.Framework.Base;
-using DeskLinkServer.Framework.Components;
 using DeskLinkServer.Framework.Pages;
+using DeskLinkServer.Framework.Components;
 
 namespace DeskLinkServer.Logic
 {
     public class MainViewModel : ObservableObject
     {
+        private readonly MainLogic mainLogic;
+
         public MainViewModel()
         {
-            currentPage = new PlaceholderPage();
+            mainLogic = new MainLogic();
+
+            placeholderPage = new PlaceholderPage();
+            addDevicePage = new AddDevicePage();
+            devicesListPage = new DevicesListPage();
+
+            CurrentPage = (mainLogic.Configuration.KnownDevices.Count == 0) ? placeholderPage : devicesListPage;
         }
 
         #region Fields
 
-        private string statusText = "StatusText";
-        private string deviceNameText = "DeviceNameText";
+        private readonly PlaceholderPage placeholderPage;
+        private readonly AddDevicePage addDevicePage;
+        private readonly DevicesListPage devicesListPage;
+
+        private string statusText = Properties.Resources.DefaultStatusText;
+        private string deviceNameText = Properties.Resources.DefaultDeviceName;
 
         private Page currentPage;
 
@@ -84,12 +96,12 @@ namespace DeskLinkServer.Logic
 
         public ICommand OnLoadedCommand
         {
-            get => new RelayCommand((o) => { });
+            get => new RelayCommand((o) => mainLogic.Start());
         }
 
         public ICommand OnClosingCommand
         {
-            get => new RelayCommand((o) => { });
+            get => new RelayCommand((o) => mainLogic.Stop());
         }
 
         #endregion

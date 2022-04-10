@@ -7,7 +7,7 @@ using DeskLinkServer.Logic.Protocol;
 
 namespace DeskLinkServer.Logic.Network
 {
-    public class BluetoothServer : IServer
+    public class UDPServer : IServer
     {
         public event Action<string> ClientConnected;
         public event Action<string> ClientDisconnected;

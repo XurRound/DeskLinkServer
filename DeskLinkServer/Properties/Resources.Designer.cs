@@ -70,6 +70,51 @@ namespace DeskLinkServer.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Назад.
+        /// </summary>
+        public static string BackButtonText {
+            get {
+                return ResourceManager.GetString("BackButtonText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Отсканируйте QR-код в мобильном приложении.
+        /// </summary>
+        public static string ConnectionInfoText {
+            get {
+                return ResourceManager.GetString("ConnectionInfoText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Добавление устройства.
+        /// </summary>
+        public static string ConnectionInfoTitle {
+            get {
+                return ResourceManager.GetString("ConnectionInfoTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Этот компьютер.
+        /// </summary>
+        public static string DefaultDeviceName {
+            get {
+                return ResourceManager.GetString("DefaultDeviceName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Ожидание подключения....
+        /// </summary>
+        public static string DefaultStatusText {
+            get {
+                return ResourceManager.GetString("DefaultStatusText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на DeskLink Server.
         /// </summary>
         public static string MainWindowTitle {
