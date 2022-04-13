@@ -5,11 +5,11 @@ using System.Windows.Media;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
 
-namespace DeskLinkServer.Framework.Pages
+namespace DeskLinkServer.Views
 {
-    public partial class AddDevicePage : Page
+    public partial class AddDeviceView : UserControl
     {
-        public AddDevicePage()
+        public AddDeviceView()
         {
             InitializeComponent();
             GenerateQR();

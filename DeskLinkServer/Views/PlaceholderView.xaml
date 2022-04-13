@@ -1,14 +1,13 @@
-﻿<Page x:Class="DeskLinkServer.Framework.Pages.PlaceholderPage"
-      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-      xmlns:local="clr-namespace:DeskLinkServer.Framework.Pages"
-      xmlns:c="clr-namespace:DeskLinkServer.Framework.Components"
-      xmlns:resx="clr-namespace:DeskLinkServer.Properties"
-      mc:Ignorable="d" 
-      d:DesignHeight="239" d:DesignWidth="354"
-      Title="PlaceholderPage">
+﻿<UserControl x:Class="DeskLinkServer.Views.PlaceholderView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:DeskLinkServer.Views"
+             xmlns:c="clr-namespace:DeskLinkServer.Framework.Components"
+             xmlns:resx="clr-namespace:DeskLinkServer.Properties"
+             mc:Ignorable="d" 
+             d:DesignHeight="239" d:DesignWidth="354">
     <StackPanel
         VerticalAlignment="Center"
         HorizontalAlignment="Center"
@@ -28,7 +27,8 @@
                     Height="40"
                     Width="200"
                     VerticalAlignment="Center"
-                    HorizontalAlignment="Center"/>
+                    HorizontalAlignment="Center"
+                    Command="{Binding AddDeviceCommand}"/>
         </Border>
     </StackPanel>
-</Page>
+</UserControl>

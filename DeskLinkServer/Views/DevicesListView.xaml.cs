@@ -13,11 +13,11 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace DeskLinkServer.Framework.Pages
+namespace DeskLinkServer.Views
 {
-    public partial class DevicesListPage : Page
+    public partial class DevicesListView : UserControl
     {
-        public DevicesListPage()
+        public DevicesListView()
         {
             InitializeComponent();
         }

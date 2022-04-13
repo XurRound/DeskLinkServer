@@ -11,7 +11,5 @@ namespace DeskLinkServer.Logic.Configuration
         public readonly int ServicePort = 15507;
 
         public readonly List<Device> KnownDevices = new List<Device>();
-
-
     }
 }

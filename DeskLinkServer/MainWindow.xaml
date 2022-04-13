@@ -3,24 +3,15 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:i="clr-namespace:Microsoft.Xaml.Behaviors;assembly=Microsoft.Xaml.Behaviors"
         xmlns:c="clr-namespace:DeskLinkServer.Framework.Components"
         xmlns:resx="clr-namespace:DeskLinkServer.Properties"
-        xmlns:logic="clr-namespace:DeskLinkServer.Logic"
+        xmlns:views="clr-namespace:DeskLinkServer.Views"
+        xmlns:vms="clr-namespace:DeskLinkServer.ViewModels"
         xmlns:local="clr-namespace:DeskLinkServer"
-        d:DataContext="{d:DesignInstance logic:MainViewModel}"
         mc:Ignorable="d"
         Title="{x:Static resx:Resources.MainWindowTitle}"
         Height="400" Width="384"
         ResizeMode="CanMinimize">
-    <i:Interaction.Triggers>
-        <i:EventTrigger EventName="Loaded">
-            <i:InvokeCommandAction Command="{Binding OnLoadedCommand}"/>
-        </i:EventTrigger>
-        <i:EventTrigger EventName="Closing">
-            <i:InvokeCommandAction Command="{Binding OnClosingCommand}"/>
-        </i:EventTrigger>
-    </i:Interaction.Triggers>
     <Grid Background="{StaticResource MainBackgroundBrush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="120"/>
@@ -74,10 +65,20 @@
                 Margin="10 5 10 10"
                 Background="{StaticResource MainForegroundBrush}"
                 CornerRadius="5">
-            <Frame Margin="5"
-                   Content="{Binding CurrentPage}"
-                   NavigationUIVisibility="Hidden"
-                   Focusable="False"/>
+            <Grid Margin="5">
+                <Grid.Resources>
+                    <DataTemplate DataType="{x:Type vms:PlaceholderViewModel}">
+                        <views:PlaceholderView/>
+                    </DataTemplate>
+                    <DataTemplate DataType="{x:Type vms:DevicesListViewModel}">
+                        <views:DevicesListView/>
+                    </DataTemplate>
+                    <DataTemplate DataType="{x:Type vms:AddDeviceViewModel}">
+                        <views:AddDeviceView/>
+                    </DataTemplate>
+                </Grid.Resources>
+                <ContentControl Content="{Binding CurrentView}"/>
+            </Grid>
         </Border>
     </Grid>
 </Window>

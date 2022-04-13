@@ -1,5 +1,4 @@
 ﻿using System.Windows;
-using DeskLinkServer.Logic;
 
 namespace DeskLinkServer
 {
@@ -8,7 +7,6 @@ namespace DeskLinkServer
         public MainWindow()
         {
             InitializeComponent();
-            DataContext = new MainViewModel();
         }
     }
 }
