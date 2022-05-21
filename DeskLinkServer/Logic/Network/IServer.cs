@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using DeskLinkServer.Logic.Protocol;
 
 namespace DeskLinkServer.Logic.Network
@@ -7,8 +8,10 @@ namespace DeskLinkServer.Logic.Network
     {
         event Action ClientConnected;
         event Action ClientDisconnected;
-        event Action<DataRecievedEventArgs> DataReceived;
+        event Action<Message> DataReceived;
         event Action<string> ErrorOccured;
+
+        void Send(byte[] data, IPEndPoint endPoint);
 
         void Start();
 

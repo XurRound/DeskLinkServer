@@ -29,15 +29,17 @@ namespace DeskLinkServer.ViewModels
             IPAddress[] addresses = Dns.GetHostAddresses(Dns.GetHostName());
             string ips = "";
             foreach (IPAddress address in addresses)
+            {
                 if (address.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)
                     ips += (ips == "" ? "" : ",") + address.ToString();
+            }
             Console.WriteLine(ips);
             GenerateQR($"{mainLogic.Configuration.ServiceName}|{DeviceInfo.GetDeviceIdentifier()}|{ips}|{Dns.GetHostName()}");
         }
 
         private void GenerateQR(string data)
         {
-            byte[] code = BitmapByteQRCodeHelper.GetQRCode(data, QRCodeGenerator.ECCLevel.Q, 2);
+            byte[] code = BitmapByteQRCodeHelper.GetQRCode(data, QRCodeGenerator.ECCLevel.Q, 1);
             using (MemoryStream stream = new MemoryStream(code))
             {
                 BitmapImage image = new BitmapImage();

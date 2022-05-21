@@ -13,6 +13,8 @@ namespace DeskLinkServer.Logic
         public Config Configuration { get; }
         public IServer Server { get; }
 
+        private ProtocolHandler protocolHandler;
+
         private readonly ServiceDispatcher serviceDispatcher;
 
         public MainLogic()
@@ -21,66 +23,57 @@ namespace DeskLinkServer.Logic
 
             serviceDispatcher = new ServiceDispatcher(Configuration.ServiceName, Configuration.ServicePort);
 
-            Server = new TCPServer(15500);
+            Server = new UDPServer(15500);
 
-            RegisterCommands();
-        }
+            //Configuration.KnownDevices.Add(new Device("A00A2239AD42421584E564599FA927FB", "My liebe device"));
 
-        private void RegisterCommands()
-        {
-            Server.DataReceived += new Action<DataRecievedEventArgs>((e) =>
+            protocolHandler = new ProtocolHandler((message) =>
             {
-                DataReader reader = e.DataReader;
-                if (e.IsKnownMessage)
+                byte[] data = message.Data;
+                switch (message.MessageType)
                 {
-                    byte[] data;
-                    switch (e.MessageType)
-                    {
-                        case MessageType.Auth:
-                            MessageBox.Show("LOL");
-                            break;
-                        case MessageType.CursorMove:
-                            data = reader.ReadBytes(4);
-                            short dx = (short)((data[0] << 8) + data[1]);
-                            short dy = (short)((data[2] << 8) + data[3]);
-                            WinAPIHelper.MoveCursor(dx, dy);
-                            Console.WriteLine("W: " + DateTime.Now.Millisecond);
-                            break;
-                        case MessageType.TypeSymbol:
-                            data = reader.ReadBytes(1);
-                            WinAPIHelper.SendInput(data[0].ToString());
-                            break;
-                        case MessageType.TypeSpecialSymbol:
-                            data = reader.ReadBytes(1);
-                            string cmd;
-                            switch (data[0])
-                            {
-                                case 0x10:
-                                    cmd = "{ENTER}";
-                                    break;
-                                case 0x15:
-                                    cmd = "{BACKSPACE}";
-                                    break;
-                                default:
-                                    cmd = "";
-                                    return;
-                            }
-                            WinAPIHelper.SendInput(cmd);
-                            break;
-                        case MessageType.LeftClick:
-                            WinAPIHelper.MouseEvent(WinAPIHelper.MouseClickEventType.LeftClick);
-                            break;
-                        case MessageType.RightClick:
-                            WinAPIHelper.MouseEvent(WinAPIHelper.MouseClickEventType.RightClick);
-                            break;
-                        case MessageType.LeftDown:
-                            WinAPIHelper.MouseEvent(WinAPIHelper.MouseClickEventType.LeftDown);
-                            break;
-                        case MessageType.LeftUp:
-                            WinAPIHelper.MouseEvent(WinAPIHelper.MouseClickEventType.LeftUp);
-                            break;
-                    }
+                    case MessageType.CursorMove:
+                        short dx = (short)((data[0] << 8) + data[1]);
+                        short dy = (short)((data[2] << 8) + data[3]);
+                        WinAPIHelper.MoveCursor(dx, dy);
+                        break;
+                    case MessageType.TypeSymbol:
+                        WinAPIHelper.SendInput(data[0].ToString());
+                        break;
+                    case MessageType.TypeSpecialSymbol:
+                        string cmd;
+                        switch (data[1])
+                        {
+                            case 0x10:
+                                cmd = "{ENTER}";
+                                break;
+                            case 0x15:
+                                cmd = "{BACKSPACE}";
+                                break;
+                            default:
+                                cmd = "";
+                                return;
+                        }
+                        WinAPIHelper.SendInput(cmd);
+                        break;
+                    case MessageType.LeftClick:
+                        WinAPIHelper.MouseEvent(WinAPIHelper.MouseClickEventType.LeftClick);
+                        break;
+                    case MessageType.RightClick:
+                        WinAPIHelper.MouseEvent(WinAPIHelper.MouseClickEventType.RightClick);
+                        break;
+                    case MessageType.LeftDown:
+                        WinAPIHelper.MouseEvent(WinAPIHelper.MouseClickEventType.LeftDown);
+                        break;
+                    case MessageType.LeftUp:
+                        WinAPIHelper.MouseEvent(WinAPIHelper.MouseClickEventType.LeftUp);
+                        break;
                 }
+            }, Configuration.KnownDevices);
+
+            Server.DataReceived += new Action<Message>((message) =>
+            {
+                protocolHandler.Handle(message, Server);
             });
         }
 
