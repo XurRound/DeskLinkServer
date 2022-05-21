@@ -10,10 +10,11 @@
     <StackPanel Orientation="Horizontal"
                 VerticalAlignment="Center"
                 HorizontalAlignment="Center">
-        <Border Name="img"
-                Width="200"
+        <Border Width="200"
                 Height="200"
-                CornerRadius="20 0 0 20"/>
+                CornerRadius="20 0 0 20"
+                Background="{Binding QRCodeImage}"
+                RenderOptions.BitmapScalingMode="NearestNeighbor"/>
         <Border Background="{StaticResource MainBackgroundBrush}"
                 CornerRadius="0 20 20 0"
                 VerticalAlignment="Stretch"

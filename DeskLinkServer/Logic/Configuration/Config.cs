@@ -6,7 +6,7 @@ namespace DeskLinkServer.Logic.Configuration
     public class Config
     {
         [JsonIgnore]
-        public readonly string ServiceName = "DeskLink";
+        public readonly string ServiceName = "DLS";
         [JsonIgnore]
         public readonly int ServicePort = 15507;
 

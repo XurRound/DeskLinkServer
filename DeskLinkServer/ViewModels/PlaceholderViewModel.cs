@@ -1,6 +1,7 @@
 ﻿using System.Windows.Input;
 using DeskLinkServer.Stores;
 using DeskLinkServer.Framework.Base;
+using DeskLinkServer.Logic;
 
 namespace DeskLinkServer.ViewModels
 {
@@ -8,11 +9,11 @@ namespace DeskLinkServer.ViewModels
     {
         public ICommand AddDeviceCommand { get; }
 
-        public PlaceholderViewModel(NavigationStore navigationStore)
+        public PlaceholderViewModel(NavigationStore navigationStore, MainLogic mainLogic)
         {
             AddDeviceCommand = new RelayCommand((o) =>
             {
-                navigationStore.CurrentViewModel = new AddDeviceViewModel(navigationStore);
+                navigationStore.CurrentViewModel = new AddDeviceViewModel(navigationStore, mainLogic);
             });
         }
     }

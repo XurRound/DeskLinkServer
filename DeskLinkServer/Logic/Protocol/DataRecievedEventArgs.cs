@@ -8,9 +8,10 @@ namespace DeskLinkServer.Logic.Protocol
         public DataReader DataReader { get; }
         public bool IsKnownMessage { get; } = true;
 
-        public DataRecievedEventArgs(int messageId, DataReader dataReader)
+        public DataRecievedEventArgs(DataReader dataReader)
         {
-            if (!Enum.IsDefined(typeof(MessageType), messageId))
+            byte messageId = dataReader.ReadBytes(1)[0];
+            if (Enum.IsDefined(typeof(MessageType), (int)messageId))
             {
                 MessageType = (MessageType)messageId;
                 DataReader = dataReader;

@@ -7,6 +7,63 @@
              mc:Ignorable="d" 
              d:DesignHeight="239" d:DesignWidth="354">
     <Grid>
-        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="20"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <TextBlock VerticalAlignment="Center"
+                   HorizontalAlignment="Center"
+                   Text="Доверенные устройства"
+                   Margin="5 0 5 5"
+                   Grid.Row="0"/>
+        <ScrollViewer Grid.Row="1"
+                      HorizontalScrollBarVisibility="Disabled"
+                      VerticalScrollBarVisibility="Hidden"
+                      VirtualizingPanel.ScrollUnit="Pixel">
+            <StackPanel Orientation="Vertical">
+                <ListBox ItemsSource="{Binding KnownDevices}"
+                         Background="{StaticResource MainForegroundBrush}"
+                         BorderThickness="0"
+                         ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                         ScrollViewer.VerticalScrollBarVisibility="Disabled">
+                    <ListBox.Template>
+                        <ControlTemplate>
+                            <ItemsPresenter/>
+                        </ControlTemplate>
+                    </ListBox.Template>
+                    <ListBox.ItemContainerStyle>
+                        <Style TargetType="{x:Type ListBoxItem}">
+                            <Setter Property="Focusable" Value="False"/>
+                        </Style>
+                    </ListBox.ItemContainerStyle>
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal"
+                                Margin="5">
+                                <Image Source="{StaticResource deviceIcon}"
+                               Width="40"
+                               Height="40"
+                               Margin="5"/>
+                                <StackPanel Orientation="Vertical"
+                                    VerticalAlignment="Center"
+                                    Margin="10 0 0 0">
+                                    <TextBlock Text="{Binding Name}"
+                                       FontSize="20"/>
+                                    <TextBlock Text="{Binding Identifier}"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+                <Button Style="{StaticResource MainButtonStyle}"
+                        Width="200"
+                        Height="40"
+                        Padding="10"
+                        Content="Добавить устройство"
+                        Focusable="False"
+                        Margin="10"
+                        Command="{Binding AddDeviceCommand}"/>
+            </StackPanel>
+        </ScrollViewer>
     </Grid>
 </UserControl>

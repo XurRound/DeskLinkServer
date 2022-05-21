@@ -12,7 +12,7 @@ namespace DeskLinkServer.Logic.Configuration
         {
             try
             {
-                File.WriteAllText(configFileName, JsonConvert.SerializeObject(config));
+                File.WriteAllText(configFileName, JsonConvert.SerializeObject(config, typeof(Config), new JsonSerializerSettings()));
             }
             catch (Exception e)
             {

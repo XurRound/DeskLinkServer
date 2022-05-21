@@ -10,7 +10,7 @@ namespace DeskLinkServer.Framework.Components
         Wait,
         [StatusAttribute("errorIcon", false)]
         Error,
-        [StatusAttribute("missingDevicesIcon", false)]
+        [StatusAttribute("deviceIcon", false)]
         MissingDevices
     }
 }

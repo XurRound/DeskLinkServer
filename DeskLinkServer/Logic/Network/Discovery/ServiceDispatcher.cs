@@ -4,6 +4,7 @@ using System.Net;
 using System.Text;
 using System.Threading;
 using System.Net.Sockets;
+using DeskLinkServer.Logic.Helpers;
 
 namespace DeskLinkServer.Logic.Network.Discovery
 {
@@ -11,7 +12,7 @@ namespace DeskLinkServer.Logic.Network.Discovery
     {
         private readonly UdpClient udpClient;
 
-        private readonly CancellationTokenSource ctSource;
+        private CancellationTokenSource ctSource;
 
         private readonly byte[] greeting = Encoding.UTF8.GetBytes("DeskLink|1.0");
 
@@ -19,9 +20,13 @@ namespace DeskLinkServer.Logic.Network.Discovery
 
         private readonly Thread workingThread;
 
+        private readonly string deviceHWID;
+
         public ServiceDispatcher(string serviceName, int servicePort)
         {
             this.serviceName = serviceName;
+
+            deviceHWID = DeviceInfo.GetDeviceIdentifier();
 
             ctSource = new CancellationTokenSource();
 
@@ -63,9 +68,9 @@ namespace DeskLinkServer.Logic.Network.Discovery
                 }
                 if (localIP != null)
                 {
-                    string reportStr = $"DLS|{serviceName}|{localIP}|{Dns.GetHostName()}";
+                    string reportStr = $"{serviceName}|{deviceHWID}|{localIP}|{Dns.GetHostName()}";
                     byte[] report = Encoding.UTF8.GetBytes(reportStr);
-                    udpClient.Send(report, report.Length, endPoint);
+                    udpClient.Send(report, report.Length, new IPEndPoint(endPoint.Address, 15508));
 
                     Console.WriteLine($"Report sent: '{reportStr}'");
                 }
@@ -74,6 +79,7 @@ namespace DeskLinkServer.Logic.Network.Discovery
 
         public void Start()
         {
+            ctSource = new CancellationTokenSource();
             workingThread.Start();
         }
 

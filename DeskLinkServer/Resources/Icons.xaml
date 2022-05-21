@@ -27,7 +27,7 @@
         </DrawingImage.Drawing>
     </DrawingImage>
 
-    <DrawingImage x:Key="missingDevicesIcon">
+    <DrawingImage x:Key="deviceIcon">
         <DrawingImage.Drawing>
             <DrawingGroup ClipGeometry="M0,0 V512 H384 V0 H0 Z">
                 <GeometryDrawing Brush="{StaticResource BlueBrush}"

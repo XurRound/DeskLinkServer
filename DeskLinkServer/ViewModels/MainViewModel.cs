@@ -1,8 +1,8 @@
 ﻿using System;
-using System.Windows.Input;
 using DeskLinkServer.Stores;
 using DeskLinkServer.Framework.Base;
 using DeskLinkServer.Framework.Components;
+using DeskLinkServer.Logic;
 
 namespace DeskLinkServer.ViewModels
 {
@@ -10,12 +10,28 @@ namespace DeskLinkServer.ViewModels
     {
         private readonly NavigationStore navigationStore;
 
-        public MainViewModel(NavigationStore navigationStore)
+        public MainViewModel(NavigationStore navigationStore, MainLogic mainLogic)
         {
             this.navigationStore = navigationStore;
             navigationStore.CurrentViewModelChanged += new Action(() =>
             {
                 RaisePropertyChanged(nameof(CurrentView));
+            });
+            DeviceNameText = Environment.MachineName;
+            mainLogic.Server.ClientConnected += new Action(() =>
+            {
+                StatusText = "Подключен";
+                DisplayStatus = Status.Success;
+            });
+            mainLogic.Server.ClientDisconnected += new Action(() =>
+            {
+                StatusText = "Ожидание подключения";
+                DisplayStatus = Status.Wait;
+            });
+            mainLogic.Server.ErrorOccured += new Action<string>((message) =>
+            {
+                StatusText = "Ошибка";
+                DisplayStatus = Status.Error;
             });
         }
 

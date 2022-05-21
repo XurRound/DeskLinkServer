@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using DeskLinkServer.Logic;
+using DeskLinkServer.Services;
 using DeskLinkServer.Stores;
 using DeskLinkServer.ViewModels;
 
@@ -18,14 +19,16 @@ namespace DeskLinkServer
             mainLogic = new MainLogic();
             
             navigationStore = new NavigationStore();
-            navigationStore.CurrentViewModel = (mainLogic.Configuration.KnownDevices.Count == 0) ?
-                new PlaceholderViewModel(navigationStore) : new DevicesListViewModel(navigationStore);
 
-            mainViewModel = new MainViewModel(navigationStore);
+            NavigationService.NavigateToDeviceList(navigationStore, mainLogic);
+
+            mainViewModel = new MainViewModel(navigationStore, mainLogic);
         }
 
         protected override void OnStartup(StartupEventArgs e)
         {
+            mainLogic.Start();
+
             MainWindow = new MainWindow()
             {
                 DataContext = mainViewModel
@@ -34,6 +37,13 @@ namespace DeskLinkServer
             MainWindow.Show();
 
             base.OnStartup(e);
+        }
+
+        protected override void OnExit(ExitEventArgs e)
+        {
+            mainLogic.Stop();
+
+            base.OnExit(e);
         }
     }
 }

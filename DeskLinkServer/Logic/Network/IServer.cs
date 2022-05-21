@@ -5,10 +5,10 @@ namespace DeskLinkServer.Logic.Network
 {
     public interface IServer
     {
-        public event Action<string> ClientConnected;
-        public event Action<string> ClientDisconnected;
-        public event Action<DataRecievedEventArgs> DataReceived;
-        public event Action<string> ErrorOccured;
+        event Action ClientConnected;
+        event Action ClientDisconnected;
+        event Action<DataRecievedEventArgs> DataReceived;
+        event Action<string> ErrorOccured;
 
         void Start();
 

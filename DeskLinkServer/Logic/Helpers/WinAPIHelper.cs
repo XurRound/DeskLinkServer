@@ -36,12 +36,18 @@ namespace DeskLinkServer.Logic.Helpers
                     MouseEvent(MouseEventType.MiddleDown);
                     MouseEvent(MouseEventType.MiddleUp);
                     break;
+                case MouseClickEventType.LeftDown:
+                    MouseEvent(MouseEventType.LeftDown);
+                    break;
+                case MouseClickEventType.LeftUp:
+                    MouseEvent(MouseEventType.LeftUp);
+                    break;
             }
         }
 
         public static void MouseEvent(MouseEventType eventType)
         {
-            MouseEvent((uint)eventType, 0, 0, 0, 0);
+            mouse_event((uint)eventType, 0, 0, 0, 0);
         }
 
         #endregion
@@ -52,7 +58,9 @@ namespace DeskLinkServer.Logic.Helpers
         {
             LeftClick,
             MiddleClick,
-            RightClick
+            RightClick,
+            LeftDown,
+            LeftUp
         }
 
         public enum MouseEventType
@@ -88,7 +96,7 @@ namespace DeskLinkServer.Logic.Helpers
         private static extern bool GetCursorPos(out IntPoint point);
 
         [DllImport("User32.dll", SetLastError = true)]
-        private static extern void MouseEvent(uint dwFlags, uint dx, uint dy, uint dwData, int dwExtraInfo);
+        private static extern void mouse_event(uint dwFlags, uint dx, uint dy, uint dwData, int dwExtraInfo);
 
         #endregion
     }
