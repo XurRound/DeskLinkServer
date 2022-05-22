@@ -1,5 +1,6 @@
 ﻿using System.Windows.Forms;
 using System.Runtime.InteropServices;
+using System.Collections.Generic;
 
 namespace DeskLinkServer.Logic.Helpers
 {
@@ -7,17 +8,33 @@ namespace DeskLinkServer.Logic.Helpers
     {
         #region [Public Methods]
 
+        private static readonly HashSet<char> charsToEscape = new HashSet<char>() { '+', '^', '%', '~', '(', ')', '{', '}', '[', ']' };
+
+        private static string EscapeSymbol(char c)
+        {
+            if (charsToEscape.Contains(c))
+                return "{" + c + "}";
+            else
+                return c.ToString();
+        }
+
         public static void MoveCursor(short x, short y)
         {
             GetCursorPos(out currentCursorPosition);
             SetCursorPos(currentCursorPosition.X - x, currentCursorPosition.Y - y);
         }
 
-        public static void SendInput(string keyCode)
+        public static void SendInput(string data, bool escape)
         {
-            if (string.IsNullOrEmpty(keyCode))
+            if (string.IsNullOrEmpty(data))
                 return;
-            SendKeys.Send(keyCode);
+            if (escape)
+            {
+                foreach (char c in data)
+                    SendKeys.SendWait(EscapeSymbol(c));
+            }
+            else
+                SendKeys.SendWait(data);
         }
 
         public static void MouseEvent(MouseClickEventType eventType)

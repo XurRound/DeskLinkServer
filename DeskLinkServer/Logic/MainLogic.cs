@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using System.Windows;
 using DeskLinkServer.Logic.Configuration;
 using DeskLinkServer.Logic.Helpers;
@@ -25,8 +26,6 @@ namespace DeskLinkServer.Logic
 
             Server = new UDPServer(15500);
 
-            //Configuration.KnownDevices.Add(new Device("A00A2239AD42421584E564599FA927FB", "My liebe device"));
-
             protocolHandler = new ProtocolHandler((message) =>
             {
                 byte[] data = message.Data;
@@ -37,24 +36,22 @@ namespace DeskLinkServer.Logic
                         short dy = (short)((data[2] << 8) + data[3]);
                         WinAPIHelper.MoveCursor(dx, dy);
                         break;
-                    case MessageType.TypeSymbol:
-                        WinAPIHelper.SendInput(data[0].ToString());
+                    case MessageType.TypeText:
+                        WinAPIHelper.SendInput(Encoding.UTF8.GetString(data), true);
                         break;
                     case MessageType.TypeSpecialSymbol:
-                        string cmd;
-                        switch (data[1])
+                        string cmd = "";
+                        switch (data[0])
                         {
-                            case 0x10:
-                                cmd = "{ENTER}";
-                                break;
-                            case 0x15:
+                            case 0x08:
                                 cmd = "{BACKSPACE}";
                                 break;
-                            default:
-                                cmd = "";
-                                return;
+                            case 0x0D:
+                                cmd = "{ENTER}";
+                                break;
                         }
-                        WinAPIHelper.SendInput(cmd);
+                        if (cmd != "")
+                            WinAPIHelper.SendInput(cmd, false);
                         break;
                     case MessageType.LeftClick:
                         WinAPIHelper.MouseEvent(WinAPIHelper.MouseClickEventType.LeftClick);

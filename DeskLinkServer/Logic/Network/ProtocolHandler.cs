@@ -3,6 +3,7 @@ using System.Net;
 using System.Linq;
 using System.Collections.Generic;
 using DeskLinkServer.Logic.Protocol;
+using System.Windows;
 
 namespace DeskLinkServer.Logic.Network
 {
@@ -23,7 +24,11 @@ namespace DeskLinkServer.Logic.Network
 
         public void Handle(Message message, IServer server)
         {
-            if (message.MessageType == MessageType.Auth)
+            if (message.MessageType == MessageType.Register)
+            {
+                MessageBox.Show("Registring?");
+            }
+            else if (message.MessageType == MessageType.Auth)
             {
                 byte[] response;
                 string id = BitConverter.ToString(message.Data).Replace("-", "");
