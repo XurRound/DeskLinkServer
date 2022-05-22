@@ -10,6 +10,7 @@
         LeftUp =            0xB4,
         CursorMove =        0xF0,
         TypeText =          0xA0,
-        TypeSpecialSymbol = 0xA1
+        TypeSpecialSymbol = 0xA1,
+        Quit =              0x5A
     }
 }

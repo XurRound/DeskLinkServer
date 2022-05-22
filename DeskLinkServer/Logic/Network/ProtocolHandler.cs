@@ -3,48 +3,60 @@ using System.Net;
 using System.Linq;
 using System.Collections.Generic;
 using DeskLinkServer.Logic.Protocol;
-using System.Windows;
+using System.Text;
 
 namespace DeskLinkServer.Logic.Network
 {
     public class ProtocolHandler
     {
-        private List<IPAddress> authorizedIPs;
+        private readonly List<IPAddress> authorizedIPs;
 
-        private List<Device> knownDevices;
+        private readonly List<Device> knownDevices;
 
-        private event Action<Message> onAuthorizedMessage;
+        public event Action<Message> OnAuthorizedMessage;
+        public event Action<string, string, IPEndPoint> OnRegisterRequest;
+        public event Action<string> OnAuthSuccess;
+        public event Action<string> OnDeviceQuit;
 
-        public ProtocolHandler(Action<Message> onAuthorizedMessage, List<Device> knownDevices)
+        private readonly IServer server;
+
+        public ProtocolHandler(IServer server, List<Device> knownDevices)
         {
             authorizedIPs = new List<IPAddress>();
-            this.onAuthorizedMessage = onAuthorizedMessage;
+            this.server = server;
             this.knownDevices = knownDevices;
         }
 
-        public void Handle(Message message, IServer server)
+        public void Handle(Message message)
         {
-            if (message.MessageType == MessageType.Register)
+            switch (message.MessageType)
             {
-                MessageBox.Show("Registring?");
-            }
-            else if (message.MessageType == MessageType.Auth)
-            {
-                byte[] response;
-                string id = BitConverter.ToString(message.Data).Replace("-", "");
-                if (knownDevices.Where((d) => d.Identifier == id).SingleOrDefault() != null)
-                {
-                    response = new byte[] { 0x77, 0xFF };
-                    authorizedIPs.Add(message.From.Address);
-                }
-                else
-                    response = new byte[] { 0x77, 0x01 };
-                server.Send(response, message.From);
-            }
-            else
-            {
-                if (authorizedIPs.Contains(message.From.Address))
-                    onAuthorizedMessage?.Invoke(message);
+                case MessageType.Register:
+                    string devName = Encoding.UTF8.GetString(message.Data, 2, message.Data[0]);
+                    string devId = Encoding.UTF8.GetString(message.Data, message.Data[0] + 2, message.Data[1]).ToUpper();
+                    OnRegisterRequest?.Invoke(devId, devName, message.From);
+                    break;
+                case MessageType.Auth:
+                    byte[] response;
+                    string id = BitConverter.ToString(message.Data).Replace("-", "");
+                    if (knownDevices.Where((d) => d.Identifier == id).SingleOrDefault() != null)
+                    {
+                        response = new byte[] { 0x77, 0xFF };
+                        authorizedIPs.Add(message.From.Address);
+                        OnAuthSuccess?.Invoke(id);
+                    }
+                    else
+                        response = new byte[] { 0x77, 0x01 };
+                    server.Send(response, message.From);
+                    break;
+                case MessageType.Quit:
+                    string id1 = BitConverter.ToString(message.Data).Replace("-", "");
+                    OnDeviceQuit?.Invoke(id1);
+                    break;
+                default:
+                    if (authorizedIPs.Contains(message.From.Address))
+                        OnAuthorizedMessage?.Invoke(message);
+                    break;
             }
         }
     }

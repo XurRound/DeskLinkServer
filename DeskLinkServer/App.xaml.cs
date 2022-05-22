@@ -16,9 +16,9 @@ namespace DeskLinkServer
 
         public App()
         {
-            mainLogic = new MainLogic();
-            
             navigationStore = new NavigationStore();
+
+            mainLogic = new MainLogic(navigationStore);
 
             NavigationService.NavigateToDeviceList(navigationStore, mainLogic);
 

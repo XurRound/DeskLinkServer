@@ -10,6 +10,7 @@ namespace DeskLinkServer.Logic.Network
         event Action ClientDisconnected;
         event Action<Message> DataReceived;
         event Action<string> ErrorOccured;
+        event Action<string, string, IPEndPoint> RegisterRequest;
 
         void Send(byte[] data, IPEndPoint endPoint);
 

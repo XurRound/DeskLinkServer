@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Text;
 using System.Windows;
 using DeskLinkServer.Logic.Configuration;
@@ -6,6 +7,8 @@ using DeskLinkServer.Logic.Helpers;
 using DeskLinkServer.Logic.Network;
 using DeskLinkServer.Logic.Network.Discovery;
 using DeskLinkServer.Logic.Protocol;
+using DeskLinkServer.Services;
+using DeskLinkServer.Stores;
 
 namespace DeskLinkServer.Logic
 {
@@ -14,19 +17,17 @@ namespace DeskLinkServer.Logic
         public Config Configuration { get; }
         public IServer Server { get; }
 
-        private ProtocolHandler protocolHandler;
-
         private readonly ServiceDispatcher serviceDispatcher;
 
-        public MainLogic()
+        public MainLogic(NavigationStore navigation)
         {
             Configuration = ConfigManager.LoadConfig();
 
             serviceDispatcher = new ServiceDispatcher(Configuration.ServiceName, Configuration.ServicePort);
 
-            Server = new UDPServer(15500);
+            Server = new UDPServer(15500, Configuration.KnownDevices);
 
-            protocolHandler = new ProtocolHandler((message) =>
+            Server.DataReceived += new Action<Message>((message) =>
             {
                 byte[] data = message.Data;
                 switch (message.MessageType)
@@ -66,12 +67,29 @@ namespace DeskLinkServer.Logic
                         WinAPIHelper.MouseEvent(WinAPIHelper.MouseClickEventType.LeftUp);
                         break;
                 }
-            }, Configuration.KnownDevices);
-
-            Server.DataReceived += new Action<Message>((message) =>
-            {
-                protocolHandler.Handle(message, Server);
             });
+            Server.RegisterRequest += (devId, devName, endPoint) =>
+            {
+                if (Configuration.KnownDevices.Where(d => d.Identifier == devId).Count() != 0)
+                {
+                    Server.Send(new byte[] { 0x77, 0x01 }, endPoint);
+                    return;
+                }
+                MessageBoxResult result = MessageBox.Show(
+                    $"Добавить [{devName}] в список доверенных устройств?",
+                    "Подключение нового устройства",
+                    MessageBoxButton.YesNo,
+                    MessageBoxImage.Question
+                );
+                if (result == MessageBoxResult.Yes)
+                {
+                    Configuration.KnownDevices.Add(new Device(devId, devName));
+                    Server.Send(new byte[] { 0x77, 0x01 }, endPoint);
+                    NavigationService.NavigateToDeviceList(navigation, this);
+                }
+                else
+                    Server.Send(new byte[] { 0x77, 0xFF }, endPoint);
+            };
         }
 
         public void Start()
