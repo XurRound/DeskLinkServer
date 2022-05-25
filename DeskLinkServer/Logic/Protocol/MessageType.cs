@@ -11,6 +11,8 @@
         CursorMove =        0xF0,
         TypeText =          0xA0,
         TypeSpecialSymbol = 0xA1,
+        PNext =             0xC0,
+        PPrevious =         0xC1,
         Quit =              0x5A
     }
 }

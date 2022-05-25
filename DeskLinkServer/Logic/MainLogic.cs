@@ -25,7 +25,8 @@ namespace DeskLinkServer.Logic
 
             serviceDispatcher = new ServiceDispatcher(Configuration.ServiceName, Configuration.ServicePort);
 
-            Server = new UDPServer(15500, Configuration.KnownDevices);
+            Server = new UDPServer(15500);
+            RefreshKnownDevices();
 
             Server.DataReceived += new Action<Message>((message) =>
             {
@@ -66,13 +67,24 @@ namespace DeskLinkServer.Logic
                     case MessageType.LeftUp:
                         WinAPIHelper.MouseEvent(WinAPIHelper.MouseClickEventType.LeftUp);
                         break;
+                    case MessageType.PNext:
+                        WinAPIHelper.SendInput("{UP}", false);
+                        break;
+                    case MessageType.PPrevious:
+                        WinAPIHelper.SendInput("{DOWN}", false);
+                        break;
                 }
             });
-            Server.RegisterRequest += (devId, devName, endPoint) =>
+            Server.RegisterRequest += (devId, devName, myIp, endPoint) =>
             {
+                byte[] ip = Encoding.UTF8.GetBytes(myIp);
+                byte[] acceptResponse = new byte[ip.Length + 2];
+                acceptResponse[0] = 0x77;
+                acceptResponse[1] = 0x01;
+                Array.Copy(ip, 0, acceptResponse, 2, ip.Length);
                 if (Configuration.KnownDevices.Where(d => d.Identifier == devId).Count() != 0)
                 {
-                    Server.Send(new byte[] { 0x77, 0x01 }, endPoint);
+                    Server.Send(acceptResponse, endPoint);
                     return;
                 }
                 MessageBoxResult result = MessageBox.Show(
@@ -84,12 +96,18 @@ namespace DeskLinkServer.Logic
                 if (result == MessageBoxResult.Yes)
                 {
                     Configuration.KnownDevices.Add(new Device(devId, devName));
-                    Server.Send(new byte[] { 0x77, 0x01 }, endPoint);
+                    Server.Send(acceptResponse, endPoint);
                     NavigationService.NavigateToDeviceList(navigation, this);
+                    RefreshKnownDevices();
                 }
                 else
                     Server.Send(new byte[] { 0x77, 0xFF }, endPoint);
             };
+        }
+
+        public void RefreshKnownDevices()
+        {
+            Server.SetKnownDevices(Configuration.KnownDevices);
         }
 
         public void Start()

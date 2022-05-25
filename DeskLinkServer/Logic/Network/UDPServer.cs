@@ -13,7 +13,7 @@ namespace DeskLinkServer.Logic.Network
         public event Action ClientDisconnected;
         public event Action<Message> DataReceived;
         public event Action<string> ErrorOccured;
-        public event Action<string, string, IPEndPoint> RegisterRequest;
+        public event Action<string, string, string, IPEndPoint> RegisterRequest;
 
         private readonly UdpClient udpClient;
 
@@ -21,11 +21,11 @@ namespace DeskLinkServer.Logic.Network
 
         private ProtocolHandler protocolHandler;
 
-        public UDPServer(int port, List<Device> knownDevices)
+        public UDPServer(int port)
         {
             udpClient = new UdpClient(port, AddressFamily.InterNetwork);
 
-            protocolHandler = new ProtocolHandler(this, knownDevices);
+            protocolHandler = new ProtocolHandler(this);
             protocolHandler.OnAuthorizedMessage += ((msg) =>
             {
                 DataReceived?.Invoke(msg);
@@ -34,14 +34,19 @@ namespace DeskLinkServer.Logic.Network
             {
                 ClientConnected?.Invoke();
             });
-            protocolHandler.OnRegisterRequest += ((devId, devName, endPoint) =>
+            protocolHandler.OnRegisterRequest += ((devId, devName, myIp, endPoint) =>
             {
-                RegisterRequest?.Invoke(devId, devName, endPoint);
+                RegisterRequest?.Invoke(devId, devName, myIp, endPoint);
             });
             protocolHandler.OnDeviceQuit += ((devName) =>
             {
                 ClientDisconnected?.Invoke();
             });
+        }
+
+        public void SetKnownDevices(List<Device> devices)
+        {
+            protocolHandler.SetKnownDevices(devices);
         }
 
         public void Restart()

@@ -1,9 +1,4 @@
-﻿using DeskLinkServer.Framework.Base;
-using DeskLinkServer.Logic;
-using DeskLinkServer.Logic.Helpers;
-using DeskLinkServer.Services;
-using DeskLinkServer.Stores;
-using QRCoder;
+﻿using QRCoder;
 using System;
 using System.IO;
 using System.Net;
@@ -11,6 +6,11 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using DeskLinkServer.Framework.Base;
+using DeskLinkServer.Logic.Helpers;
+using DeskLinkServer.Services;
+using DeskLinkServer.Stores;
+using DeskLinkServer.Logic;
 
 namespace DeskLinkServer.ViewModels
 {
